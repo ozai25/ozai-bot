@@ -1,31 +1,22 @@
-# 🦁 PROJECT OZ: AI AUTOMATION CORE
+# OZAIBOT - Multi-Tenant AI Backend
 
-**CLASSIFICATION:** INTERNAL / STRATCOM  
-**COMMANDER:** SFC Orozco  
-**STATUS:** COMBAT READY (v1.0.0)
+## 🚀 Deployment: Railway
 
-## 🎯 MISSION
-A high-availability, multi-tenant NestJS backend orchestrating AI conversations across WhatsApp, Facebook, and Instagram. Features dual-LLM intelligence (OpenAI + Claude), Redis-backed circuit breakers, and military-grade rate limiting.
+### Prerequisites
+1.  **PostgreSQL 16+** Service
+2.  **Redis 7+** Service
 
----
+### Steps
+1.  **Connect Repo:** Connect this repository to Railway.
+2.  **Add Services:** ensure a Postgres and Redis service are active.
+3.  **Variables:** Copy contents of `.env.example` to the Railway Service "Variables" tab.
+    * *Link* the Postgres variables (`DB_HOST`, `DB_PASSWORD`, etc) using Railway's variable reference system (e.g., `${{Postgres.HOST}}`).
+    * *Link* the Redis variables.
+4.  **Deploy:** Trigger the deployment.
+5.  **Verify:** Check the "Deploy Logs". Look for:
+    * `✅ Listening on 0.0.0.0:3000`
+    * `[TypeOrmModule] Dependencies initialized`
 
-## ⚡ QUICK START (LOCAL OPS)
-
-### 1. PREREQUISITES
-* Node.js v20+
-* Docker Desktop (for local Redis/Postgres)
-* Railway CLI (optional)
-
-### 2. IGNITION
-```bash
-# Install dependencies
-npm install
-
-# Wake up infrastructure (Redis + Postgres)
-docker-compose up -d
-
-# Inject Secrets
-# (Ensure .env.local exists with ADMIN_API_KEY and DB credentials)
-
-# Start Development Server
-npm run start:dev
+## ⚠️ Troubleshooting
+* **Health Check Fail:** If `/health/liveness` fails, check if the migrations ran.
+* **Migrations:** The container attempts to run migrations on boot via the separate `migrate` service in `docker-compose`, but on Railway single-service deployment, you might need to run `npm run typeorm:migration:run:ts` manually or add it to the start command if you aren't using the multi-container setup.
